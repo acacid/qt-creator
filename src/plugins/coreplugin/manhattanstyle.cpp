@@ -657,46 +657,46 @@ void ManhattanStyle::drawControl(ControlElement element, const QStyleOption *opt
         painter->restore();
         break;
 
-    case CE_MenuBarItem:
-        painter->save();
-        if (const QStyleOptionMenuItem *mbi = qstyleoption_cast<const QStyleOptionMenuItem *>(option)) {
-            const bool act = mbi->state & (State_Sunken | State_Selected);
-            const bool dis = !(mbi->state & State_Enabled);
+//    case CE_MenuBarItem:
+//        painter->save();
+//        if (const QStyleOptionMenuItem *mbi = qstyleoption_cast<const QStyleOptionMenuItem *>(option)) {
+//            const bool act = mbi->state & (State_Sunken | State_Selected);
+//            const bool dis = !(mbi->state & State_Enabled);
 
-            if (creatorTheme()->widgetStyle() == Theme::StyleFlat)
-                painter->fillRect(option->rect, creatorTheme()->color(Theme::MenuBarItemBackgroundColor));
-            else
-                StyleHelper::menuGradient(painter, option->rect, option->rect);
+//            if (creatorTheme()->widgetStyle() == Theme::StyleFlat)
+//                painter->fillRect(option->rect, creatorTheme()->color(Theme::MenuBarItemBackgroundColor));
+//            else
+//                StyleHelper::menuGradient(painter, option->rect, option->rect);
 
-            QStyleOptionMenuItem item = *mbi;
-            item.rect = mbi->rect;
-            QPalette pal = mbi->palette;
-            pal.setBrush(QPalette::ButtonText, dis
-                ? creatorTheme()->color(Theme::MenuBarItemTextColorDisabled)
-                : creatorTheme()->color(Theme::MenuBarItemTextColorNormal));
-            item.palette = pal;
-            QCommonStyle::drawControl(element, &item, painter, widget);
+//            QStyleOptionMenuItem item = *mbi;
+//            item.rect = mbi->rect;
+//            QPalette pal = mbi->palette;
+//            pal.setBrush(QPalette::ButtonText, dis
+//                ? creatorTheme()->color(Theme::MenuBarItemTextColorDisabled)
+//                : creatorTheme()->color(Theme::MenuBarItemTextColorNormal));
+//            item.palette = pal;
+//            QCommonStyle::drawControl(element, &item, painter, widget);
 
-            if (act) {
-                // Fill|
-                QColor baseColor = StyleHelper::baseColor();
-                QLinearGradient grad(option->rect.topLeft(), option->rect.bottomLeft());
-                grad.setColorAt(0, baseColor.lighter(120));
-                grad.setColorAt(1, baseColor.lighter(130));
-                painter->fillRect(option->rect, grad);
+//            if (act) {
+//                // Fill|
+//                QColor baseColor = StyleHelper::baseColor();
+//                QLinearGradient grad(option->rect.topLeft(), option->rect.bottomLeft());
+//                grad.setColorAt(0, baseColor.lighter(120));
+//                grad.setColorAt(1, baseColor.lighter(130));
+//                painter->fillRect(option->rect, grad);
 
-                QPalette pal = mbi->palette;
-                uint alignment = Qt::AlignCenter | Qt::TextShowMnemonic | Qt::TextDontClip | Qt::TextSingleLine;
-                if (!styleHint(SH_UnderlineShortcut, mbi, widget))
-                    alignment |= Qt::TextHideMnemonic;
-                pal.setBrush(QPalette::Text, dis ? Qt::gray : QColor(0, 0, 0, 60));
-                drawItemText(painter, item.rect.translated(0, 1), alignment, pal, mbi->state & State_Enabled, mbi->text, QPalette::Text);
-                pal.setBrush(QPalette::Text, dis ? Qt::gray : Qt::white);
-                drawItemText(painter, item.rect, alignment, pal, mbi->state & State_Enabled, mbi->text, QPalette::Text);
-            }
-        }
-        painter->restore();
-        break;
+//                QPalette pal = mbi->palette;
+//                uint alignment = Qt::AlignCenter | Qt::TextShowMnemonic | Qt::TextDontClip | Qt::TextSingleLine;
+//                if (!styleHint(SH_UnderlineShortcut, mbi, widget))
+//                    alignment |= Qt::TextHideMnemonic;
+//                pal.setBrush(QPalette::Text, dis ? Qt::gray : QColor(0, 0, 0, 60));
+//                drawItemText(painter, item.rect.translated(0, 1), alignment, pal, mbi->state & State_Enabled, mbi->text, QPalette::Text);
+//                pal.setBrush(QPalette::Text, dis ? Qt::gray : Qt::white);
+//                drawItemText(painter, item.rect, alignment, pal, mbi->state & State_Enabled, mbi->text, QPalette::Text);
+//            }
+//        }
+//        painter->restore();
+//        break;
 
     case CE_ComboBoxLabel:
         if (const QStyleOptionComboBox *cb = qstyleoption_cast<const QStyleOptionComboBox *>(option)) {
@@ -793,19 +793,19 @@ void ManhattanStyle::drawControl(ControlElement element, const QStyleOption *opt
         }
         break;
 
-    case CE_MenuBarEmptyArea: {
-            if (creatorTheme()->widgetStyle() == Theme::StyleDefault) {
-                StyleHelper::menuGradient(painter, option->rect, option->rect);
-                painter->save();
-                painter->setPen(StyleHelper::borderColor());
-                painter->drawLine(option->rect.bottomLeft() + QPointF(0.5, 0.5),
-                                  option->rect.bottomRight() + QPointF(0.5, 0.5));
-                painter->restore();
-            } else {
-                painter->fillRect(option->rect, creatorTheme()->color(Theme::MenuBarEmptyAreaBackgroundColor));
-            }
-        }
-        break;
+//    case CE_MenuBarEmptyArea: {
+//            if (creatorTheme()->widgetStyle() == Theme::StyleDefault) {
+//                StyleHelper::menuGradient(painter, option->rect, option->rect);
+//                painter->save();
+//                painter->setPen(StyleHelper::borderColor());
+//                painter->drawLine(option->rect.bottomLeft() + QPointF(0.5, 0.5),
+//                                  option->rect.bottomRight() + QPointF(0.5, 0.5));
+//                painter->restore();
+//            } else {
+//                painter->fillRect(option->rect, creatorTheme()->color(Theme::MenuBarEmptyAreaBackgroundColor));
+//            }
+//        }
+//        break;
 
     case CE_ToolBar:
         {
