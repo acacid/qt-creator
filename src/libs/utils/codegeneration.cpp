@@ -60,11 +60,13 @@ QTCREATOR_UTILS_EXPORT QString headerGuard(const QString &file, const QStringLis
 {
     const QChar underscore = QLatin1Char('_');
     QString rc;
+    rc += underscore;
     for (int i = 0; i < namespaceList.count(); i++)
-        rc += namespaceList.at(i).toUpper() + underscore;
+        rc += namespaceList.at(i).toLower() + underscore;
 
     const QFileInfo fi(file);
-    rc += fileNameToCppIdentifier(fi.fileName()).toUpper();
+    rc += fileNameToCppIdentifier(fi.fileName()).toLower();
+    rc += underscore;
     return rc;
 }
 
