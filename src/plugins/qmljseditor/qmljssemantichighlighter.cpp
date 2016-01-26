@@ -392,7 +392,7 @@ protected:
             format.setToolTip(d.message);
 
             collectRanges(begin, length, format);
-            addDelayedUse(SemanticHighlighter::Use(line, column, length, addFormat(format)));
+            addDelayedUse(SemanticHighlighter::Use(line, column, length, addFormat(format), 0));
         }
     }
 
@@ -433,7 +433,7 @@ protected:
             format.setToolTip(d.message);
 
             collectRanges(begin, length, format);
-            addDelayedUse(SemanticHighlighter::Use(line, column, length, addFormat(format)));
+            addDelayedUse(SemanticHighlighter::Use(line, column, length, addFormat(format), 0));
         }
     }
 
@@ -469,7 +469,7 @@ private:
 
     void addUse(const SourceLocation &location, SemanticHighlighter::UseType type)
     {
-        addUse(SemanticHighlighter::Use(location.startLine, location.startColumn, location.length, type));
+        addUse(SemanticHighlighter::Use(location.startLine, location.startColumn, location.length, type, 0));
     }
 
     static const int chunkSize = 50;
@@ -577,8 +577,10 @@ void SemanticHighlighter::applyResults(int from, int to)
     if (m_startRevision != m_document->document()->revision())
         return;
 
+    TextEditor::SemanticHighlighter::RainbowHash nullHighlight;
+    nullHighlight.colors.append(QColor(0,0,0));
     TextEditor::SemanticHighlighter::incrementalApplyExtraAdditionalFormats(
-                m_document->syntaxHighlighter(), m_watcher.future(), from, to, m_extraFormats);
+                m_document->syntaxHighlighter(), m_watcher.future(), from, to, m_extraFormats, nullHighlight);
 }
 
 void SemanticHighlighter::finished()

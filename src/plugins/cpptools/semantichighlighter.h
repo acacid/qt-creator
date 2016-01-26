@@ -27,6 +27,7 @@
 #define SEMANTICHIGHLIGHTER_H
 
 #include "cpptools_global.h"
+#include "texteditor/semantichighlighter.h"
 
 #include <QFutureWatcher>
 #include <QScopedPointer>
@@ -87,6 +88,7 @@ private:
     unsigned m_revision;
     QScopedPointer<QFutureWatcher<TextEditor::HighlightingResult>> m_watcher;
     QHash<int, QTextCharFormat> m_formatMap;
+    TextEditor::SemanticHighlighter::RainbowHash m_rainbowHighlighter;
 
     HighlightingRunner m_highlightingRunner;
 };

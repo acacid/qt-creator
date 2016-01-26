@@ -46,6 +46,7 @@ public:
     unsigned column; // 1-based
     unsigned length;
     int kind; /// The various highlighters can define their own kind of results.
+    unsigned hash;
 
     bool isValid() const
     { return line != 0; }
@@ -57,8 +58,8 @@ public:
         : line(0), column(0), length(0), kind(0)
     {}
 
-    HighlightingResult(unsigned line, unsigned column, unsigned length, int kind)
-        : line(line), column(column), length(length), kind(kind)
+    HighlightingResult(unsigned line, unsigned column, unsigned length, int kind, unsigned hash)
+        : line(line), column(column), length(length), kind(kind), hash(hash)
     {}
 
     bool operator==(const HighlightingResult& other) const
@@ -72,6 +73,19 @@ public:
 
 namespace SemanticHighlighter {
 
+class TEXTEDITOR_EXPORT RainbowHash {
+public:
+    QSet<int> kinds;
+    QHash<unsigned, QTextCharFormat> hash;
+    QList<QColor> colors;
+    float rbPower;
+    int nSteps;
+
+    RainbowHash();
+
+    QTextCharFormat generate(unsigned h, const QTextCharFormat& f);
+};
+
 // Applies the future results [from, to) and applies the extra formats
 // indicated by Result::kind and kindToFormat to the correct location using
 // SyntaxHighlighter::setExtraAdditionalFormats.
@@ -83,7 +97,8 @@ void TEXTEDITOR_EXPORT incrementalApplyExtraAdditionalFormats(
         SyntaxHighlighter *highlighter,
         const QFuture<HighlightingResult> &future,
         int from, int to,
-        const QHash<int, QTextCharFormat> &kindToFormat);
+        const QHash<int, QTextCharFormat> &kindToFormat,
+        RainbowHash &rainbowHash);
 
 // Cleans the extra additional formats after the last result of the Future
 // until the end of the document.

@@ -35,11 +35,53 @@
 using namespace TextEditor;
 using namespace TextEditor::SemanticHighlighter;
 
-void SemanticHighlighter::incrementalApplyExtraAdditionalFormats(
-        SyntaxHighlighter *highlighter,
+static QColor blendColors(const QColor& x, const QColor& y, float k)
+{
+    float r = x.redF() + (y.redF() - x.redF()) * k;
+    float g = x.greenF() + (y.greenF() - x.greenF()) * k;
+    float b = x.blueF() + (y.blueF() - x.blueF()) * k;
+    return QColor(r*255, g*255, b*255);
+}
+
+RainbowHash::RainbowHash()
+{
+    rbPower = 0.30;
+    nSteps = 10;
+}
+
+QTextCharFormat SemanticHighlighter::RainbowHash::generate(unsigned h, const QTextCharFormat& f)
+{
+    auto i = hash.find(h);
+    if(i != hash.end())
+        return *i;
+
+    float cStep = float(hash.size() % nSteps) / nSteps;
+    int prevStep = cStep * colors.size();
+    if(prevStep >= colors.size())
+        prevStep = 0;
+
+    int nextStep = prevStep + 1;
+    if(nextStep >= colors.size())
+        nextStep = 0;
+
+    float stepRel = cStep - (float(prevStep)/colors.size());
+    float k = stepRel * colors.size();
+    if(k < 0) k = 0;
+    if(k > 1) k = 1;
+    QColor newc = blendColors(colors[prevStep], colors[nextStep], k);
+
+    QTextCharFormat f2 = f;
+    QColor fgc = f.foreground().color();
+    f2.setForeground(QBrush(blendColors(fgc, newc, rbPower)));
+    hash.insert(h, f2);
+    return f2;
+}
+
+void SemanticHighlighter::incrementalApplyExtraAdditionalFormats(SyntaxHighlighter *highlighter,
         const QFuture<HighlightingResult> &future,
         int from, int to,
-        const QHash<int, QTextCharFormat> &kindToFormat)
+        const QHash<int, QTextCharFormat> &kindToFormat,
+        RainbowHash &rainbowHash)
 {
     if (to <= from)
         return;
@@ -86,6 +128,9 @@ void SemanticHighlighter::incrementalApplyExtraAdditionalFormats(
 
             formatRange.format = kindToFormat.value(result.kind);
             if (formatRange.format.isValid()) {
+                if(rainbowHash.kinds.contains(result.kind))
+                    formatRange.format = rainbowHash.generate(result.hash, formatRange.format);
+
                 formatRange.start = result.column - 1;
                 formatRange.length = result.length;
                 formats.append(formatRange);

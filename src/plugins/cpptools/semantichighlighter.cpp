@@ -93,7 +93,18 @@ void SemanticHighlighter::onHighlighterResultAvailable(int from, int to)
 
     TextEditor::SyntaxHighlighter *highlighter = m_baseTextDocument->syntaxHighlighter();
     QTC_ASSERT(highlighter, return);
-    incrementalApplyExtraAdditionalFormats(highlighter, m_watcher->future(), from, to, m_formatMap);
+
+    if(m_rainbowHighlighter.kinds.empty())
+    {
+        m_rainbowHighlighter.kinds.insert(LocalUse);
+
+        m_rainbowHighlighter.colors.append(QColor(255, 0, 0));
+        m_rainbowHighlighter.colors.append(QColor(0, 255, 0));
+        m_rainbowHighlighter.colors.append(QColor(0, 0, 255));
+    }
+
+    m_rainbowHighlighter.hash.clear();
+    incrementalApplyExtraAdditionalFormats(highlighter, m_watcher->future(), from, to, m_formatMap, m_rainbowHighlighter);
 }
 
 void SemanticHighlighter::onHighlighterFinished()

@@ -481,7 +481,7 @@ bool CheckSymbols::visit(NamespaceAST *ast)
         if (!tok.generated()) {
             unsigned line, column;
             getTokenStartPosition(ast->identifier_token, &line, &column);
-            Result use(line, column, tok.utf16chars(), SemanticHighlighter::TypeUse);
+            Result use(line, column, tok.utf16chars(), SemanticHighlighter::TypeUse, qHash(tok.spell()));
             addUse(use);
         }
     }
@@ -1129,7 +1129,7 @@ void CheckSymbols::addUse(unsigned tokenIndex, Kind kind)
     getTokenStartPosition(tokenIndex, &line, &column);
     const unsigned length = tok.utf16chars();
 
-    const Result use(line, column, length, kind);
+    const Result use(line, column, length, kind, qHash(tok.spell()));
     addUse(use);
 }
 
@@ -1165,7 +1165,7 @@ void CheckSymbols::addType(ClassOrNamespace *b, NameAST *ast)
     unsigned line, column;
     getTokenStartPosition(startToken, &line, &column);
     const unsigned length = tok.utf16chars();
-    const Result use(line, column, length, SemanticHighlighter::TypeUse);
+    const Result use(line, column, length, SemanticHighlighter::TypeUse, qHash(tok.spell()));
     addUse(use);
 }
 
@@ -1215,7 +1215,7 @@ bool CheckSymbols::maybeAddTypeOrStatic(const QList<LookupItem> &candidates, Nam
                 // treat static variable as a field(highlighting)
                 kind = SemanticHighlighter::FieldUse;
 
-            const Result use(line, column, length, kind);
+            const Result use(line, column, length, kind, qHash(tok.spell()));
             addUse(use);
 
             return true;
@@ -1250,7 +1250,7 @@ bool CheckSymbols::maybeAddField(const QList<LookupItem> &candidates, NameAST *a
         getTokenStartPosition(startToken, &line, &column);
         const unsigned length = tok.utf16chars();
 
-        const Result use(line, column, length, SemanticHighlighter::FieldUse);
+        const Result use(line, column, length, SemanticHighlighter::FieldUse, qHash(tok.spell()));
         addUse(use);
 
         return true;
@@ -1340,7 +1340,7 @@ bool CheckSymbols::maybeAddFunction(const QList<LookupItem> &candidates, NameAST
         else if (matchType == Match_TooManyArgs)
             warning(line, column, QCoreApplication::translate("CPlusPlus::CheckSymbols", "Too many arguments"), length);
 
-        const Result use(line, column, length, kind);
+        const Result use(line, column, length, kind, qHash(tok.spell()));
         addUse(use);
 
         return true;
