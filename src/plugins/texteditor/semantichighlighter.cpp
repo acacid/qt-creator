@@ -45,7 +45,7 @@ static QColor blendColors(const QColor& x, const QColor& y, float k)
 
 RainbowHash::RainbowHash()
 {
-    rbPower = 0.30;
+    rbPower = 0.40;
     nSteps = 10;
 }
 
